@@ -218,20 +218,25 @@ class hashMap{
 
     int insert(intPoint& a);
     int deleteAt(int a);
-    list<intPoint>::iterator& find(int a, bool flag);
+    int find(int a);
 
 };
 
 int hashMap::insert(intPoint& a){
 	
-	list<intPoint>::iterator i = find(a.value, false);
-		if (i != mainMap[a.value % 43].begin()) {
+	
+
+	int bucket = a.value % 43;
+	//bool flag = false;
+	for (list<intPoint>::iterator i = mainMap[bucket].begin(); i != mainMap[bucket].end(); i++) {
+
+		if (i->value == a.value) {
 			i->count++;
 			i->point->count++;
-			return 0;
+			return i->count;
 		}
-	int bucket = a.value % 43;
-	
+
+	}
 		mainMap[bucket].emplace_front(a);
 		//cout << a.point->value;
 		return -1;
@@ -247,13 +252,24 @@ int hashMap::deleteAt(int a){
         if(i->value == a && i->count == 1){
 			//cout << i->point->index;
 			int ind = i->point->index;
+			cout << "min item ";
+			cout << a;
+			cout << " successfully deleted\n";
+
 			
 			mainMap[bucket].erase(i);
+
 			return ind;
         }
         else if(i->value == a && i->count > 1){
+
             i->count--;
 			i->point->count--;
+			cout << "min item = ";
+			cout << a;
+			cout << ", count decremented, new count = ";
+			cout << i->count;
+			cout << "\n";
 			return -1;
 
         }
@@ -264,7 +280,7 @@ int hashMap::deleteAt(int a){
 
 }
 
-list<intPoint>::iterator& hashMap::find(int a, bool flag ){
+int hashMap::find(int a){
     int bucket = a % 43;
 	bool temp = false;
     for(list<intPoint>::iterator i = mainMap[bucket].begin(); i != mainMap[bucket].end(); i++ ){
@@ -272,19 +288,21 @@ list<intPoint>::iterator& hashMap::find(int a, bool flag ){
 		if(i->value == a ){
 			
 			//cout << i->point->index;
-			if (flag == true) {
-				cout << "found";
-			}
+		
+				cout << "item found, count = ";
+				cout << i->count;
+				cout << "\n";
+		
 			temp = true;
-			return i;
+			return i->count;
         }
 		
 
     }
-	if (temp == false && flag == true) {
-		cout << "did not find";
-		list<intPoint>::iterator i = mainMap[bucket].end();
-			return i;
+	if (temp == false) {
+		cout << "item not found";
+		//list<intPoint>::iterator i = mainMap[bucket].end();
+			return -1;
 	}
 }
 
@@ -376,23 +394,36 @@ void quash::insert(int a) {
 
 
 	int dup = h1.insert(hashElem);
-	if (dup != 0) {
+	if (dup == -1) {
 		m1.push(heapElem);
+		cout << "item successfully inserted, count = 1\n";
+	}
+	else {
+		cout << "item successfully inserted, count = ";
+		cout << dup;
+		cout << "\n";
 	}
 }
 
 void quash::lookup(int a){
    //cout<<"in lookup";
-	h1.find(a, true);
+	h1.find(a);
 }
 
 void quash::deleteMin(){
     
+	if (m1.A.empty() == true) {
+		cout << "min item not present since table is empty\n";
+	}
 	intPoint* min = m1.top();
 	//cout << min->value;
 
-	h1.deleteAt(min->value);
-	m1.pop();
+	int dup = h1.deleteAt(min->value);
+	if (dup != -1) {
+
+		m1.pop();
+
+	}
 
 
 
@@ -412,7 +443,11 @@ void quash::deleteAt(int a){
 }
 
 void quash::print(){
-    //cout<<"in print";
+	for (int i = 0; i < m1.A.size(); i++) {
+		cout<< m1.A[i]->value;
+		cout << " ";
+	}
+
 }
 
 int main(int argv, char** argc){
