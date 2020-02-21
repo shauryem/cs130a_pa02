@@ -85,6 +85,7 @@ class minHeap{
 
 		}
 		*/
+		
 
 		void heapify_down(int i)
 		{
@@ -105,7 +106,8 @@ class minHeap{
 			// swap with child having lesser value and 
 			// call heapify-down on the child
 			if (smallest != i) {
-				std::swap(A[i], A[smallest]);
+				swap(A[i], A[smallest]);
+				swap(A[i]->index, A[smallest]->index);
 				heapify_down(smallest);
 			}
 		}
@@ -118,6 +120,7 @@ class minHeap{
 			{
 				// swap the two if heap property is violated
 				swap(A[i], A[PARENT(i)]);
+				swap(A[i]->index, A[PARENT(i)]->index);
 
 				// call Heapify-up on the parent
 				heapify_up(PARENT(i));
@@ -213,18 +216,25 @@ class hashMap{
 
     std::array<std::list<intPoint>, 43> mainMap;
 
-    void insert(intPoint& a);
+    int insert(intPoint& a);
     int deleteAt(int a);
-    list<intPoint>::iterator find(int a);
+    list<intPoint>::iterator& find(int a, bool flag);
 
 };
 
-void hashMap::insert(intPoint& a){
+int hashMap::insert(intPoint& a){
 	
+	list<intPoint>::iterator i = find(a.value, false);
+		if (i != mainMap[a.value % 43].begin()) {
+			i->count++;
+			i->point->count++;
+			return 0;
+		}
 	int bucket = a.value % 43;
 	
 		mainMap[bucket].emplace_front(a);
 		//cout << a.point->value;
+		return -1;
 	
 	
     
@@ -254,7 +264,7 @@ int hashMap::deleteAt(int a){
 
 }
 
-list<intPoint>::iterator hashMap::find(int a ){
+list<intPoint>::iterator& hashMap::find(int a, bool flag ){
     int bucket = a % 43;
 	bool temp = false;
     for(list<intPoint>::iterator i = mainMap[bucket].begin(); i != mainMap[bucket].end(); i++ ){
@@ -262,14 +272,16 @@ list<intPoint>::iterator hashMap::find(int a ){
 		if(i->value == a ){
 			
 			//cout << i->point->index;
-            cout<<"found";
+			if (flag == true) {
+				cout << "found";
+			}
 			temp = true;
 			return i;
         }
 		
 
     }
-	if (temp == false) {
+	if (temp == false && flag == true) {
 		cout << "did not find";
 		list<intPoint>::iterator i = mainMap[bucket].end();
 			return i;
@@ -351,48 +363,34 @@ void parseCommand(string a){
 
 }
 
-void quash::insert(int a){
-    //cout<<"in insert";
-	
+void quash::insert(int a) {
+	//cout<<"in insert";
+
 	intPoint hashElem;
 	intPoint* heapElem = new intPoint;
 	hashElem.value = a;
 	heapElem->value = a;
 	hashElem.point = heapElem;
 	heapElem->point = &hashElem;
-	//cout << &hashElem;
 
 
-	
-	/*
-	list<intPoint>::iterator temp = h1.find(a);
-	list<intPoint>::iterator i = h1.mainMap[a % 43].end();
-	if (temp != i) {
-		temp->count++;
+
+	int dup = h1.insert(hashElem);
+	if (dup != 0) {
+		m1.push(heapElem);
 	}
-	*/
-	
-
-
-    h1.insert(hashElem);
-    m1.push(heapElem);
 }
 
 void quash::lookup(int a){
    //cout<<"in lookup";
-	h1.find(a);
+	h1.find(a, true);
 }
 
 void quash::deleteMin(){
     
 	intPoint* min = m1.top();
 	//cout << min->value;
-	for (int i = 0; i < m1.A.size(); i++) {
 
-
-		cout << m1.A.at(i)->value;
-		cout << " ";
-	}
 	h1.deleteAt(min->value);
 	m1.pop();
 
