@@ -169,6 +169,7 @@ class minHeap{
 				// replace the root of the heap with the last element
 				// of the vector
 				swap(A[0], A.back());
+				swap(A[0]->index, A.back()->index);
 				A.pop_back();
 			
 
@@ -458,13 +459,16 @@ void quash::deleteMin(){
 void quash::deleteAt(int a){
     //cout<<"in deleteAt";
 	int ind = h1.deleteAt(a, true);
+	//cout << ind;
 	if (ind == -2) {
 		cout << "item not present in the table\n";
 
 	}
 	else if (ind > -1) {
-		//cout << ind;
+		
+	
 		m1.deleteAt(ind);
+
 	}
 
 }
