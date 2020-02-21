@@ -274,7 +274,9 @@ int hashMap::deleteAt(int a, bool flag){
             i->count--;
 			i->point->count--;
 			if (flag == true) {
-				cout << "item successfully deleted\n";
+				cout << "item count decremented, new count";
+				cout << i->count;
+				cout << "\n";
 			}
 			else {
 				cout << "min item = ";
@@ -455,7 +457,7 @@ void quash::deleteAt(int a){
     //cout<<"in deleteAt";
 	int ind = h1.deleteAt(a, true);
 	if (ind == -2) {
-		cout << "item not present in table\n";
+		cout << "item not present in the table\n";
 
 	}
 	else if (ind > -1) {
