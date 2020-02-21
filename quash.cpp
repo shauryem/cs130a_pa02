@@ -257,6 +257,8 @@ int hashMap::deleteAt(int a, bool flag){
         if(i->value == a && i->count == 1){
 			//cout << i->point->index;
 			int ind = i->point->index;
+	
+			
 			if (flag == true) {
 				cout << "item successfully deleted\n";
 			}
@@ -270,11 +272,11 @@ int hashMap::deleteAt(int a, bool flag){
 			return ind;
         }
         else if(i->value == a && i->count > 1){
-
+		
             i->count--;
 			i->point->count--;
 			if (flag == true) {
-				cout << "item count decremented, new count";
+				cout << "item count decremented, new count = ";
 				cout << i->count;
 				cout << "\n";
 			}
